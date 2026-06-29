@@ -11,11 +11,27 @@
            <!-- <script type="module" src="./dist/day5-extra1.js"></script> -->
         <!-- <script type="module" src="./dist/day6.js"></script> -->
 
-        <script type="module" src="./dist/day8.js"></script>
+        <script type="module" src="./dist/day9.js"></script>
          <link rel="stylesheet" href="dist/style.css" />
     </head>
     <body>
-         <h1 id="title">Task Tracker</h1>
+         <form id="task-form">
+        <input id="task-input" type="text"  placeholder="New task" />
+
+        <select id="priority-input">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <button type="submit">Add Task</button>
+    </form>
+
+    <p id="error-message"></p>
+
+    <div id="app"></div>
+
+         <!-- <h1 id="title">Task Tracker</h1>
          <input
             id="task-input"
             type="text"
@@ -41,6 +57,6 @@
         Show statistics
     </button>
 
-    <div id="app"></div>
+    <div id="app"></div> -->
     </body>
 </html>
