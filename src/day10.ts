@@ -1,6 +1,6 @@
 const taskName = document.querySelector("#task-input") as HTMLInputElement;
 const form = document.querySelector("#task-form") as HTMLFormElement;
-const errorMessage = document.querySelector("#error-message") as HTMLParagraphElement;// document.getElementById("#error-message");
+const errorMessage = document.querySelector("#error-message") as HTMLParagraphElement;
 const app = document.querySelector("#app");
 const priority = document.querySelector("#priority-input") as HTMLSelectElement;
 
@@ -27,48 +27,10 @@ function handleSubmit(event: SubmitEvent): void{
     loadTasks();
 }
 
-
-
 let Tasks: Task[] = [];
-
-// localStorage.setItem(
-//     "name", "Jane"
-// );
-
-// localStorage.setItem(
-//     "city", "NY"
-// );
-
-// const name = localStorage.getItem("name");
-
-// localStorage.removeItem("name");
-
-// localStorage.clear();
-
-// const runner = {
-//     "name": "Bill",
-//     "pace": "5:10"
-// };
-
-// const json = JSON.stringify(runner);
-
-// localStorage.setItem(
-//     "runner",
-//     json
-// );
-
-// const runner2 = localStorage.getItem("runner");
-// console.log(runner2);
-
-// if (runner2 === null) {
-//     throw new Error("Runner data not found");
-// }
-
-// const runnerObject = JSON.parse(runner2);
 
 function loadTasks()
 {
-    //const json = localStorage.getItem("task");
     const json = localStorage.getItem("tasks");
 
     if(json === null)
@@ -77,14 +39,14 @@ function loadTasks()
     }
 
     Tasks = JSON.parse(json);
-    //const task = JSON.parse(json) as Task;
 
-    // Set app text content if available. Optional chaining cannot be used on the left side of an assignment.
     if (app) {
-        //app.textContent = task.name;// Tasks[0]?.name ?? "";
-        // Tasks.forEach(task => {
-        //     app.textContent += task.name;
-        // });
+        app.innerHTML = "";
+        Tasks.forEach(task => {
+            let innerDiv = document.createElement("div");
+            innerDiv.textContent = "Id: " + task.id + " Task: " + task.name + " Prioritet: " +  task.priority + " status: " + task.status;
+            app.appendChild(innerDiv);
+        });
     }
 }
 
@@ -94,53 +56,35 @@ function saveTasks(task: Task): void{
         return;
     }
 
-    //denna kod gör att det kraschar
-    // if(taskExists(task)){ d
-    //     if (errorMessage) {
-    //         errorMessage.textContent = "A task with the same name already exists.";
-    //         return;
-    //     }
-    // }
+    if(taskExists(task)){ 
+        if (errorMessage) {
+            errorMessage.textContent = "A task with the same name already exists.";
+            return;
+        }
+    }
 
      const jsonTasks = localStorage.getItem("tasks");
      if(jsonTasks){
-        const parsedTasks = JSON.parse(jsonTasks ?? "") as typeof Tasks; //denna rad gjorde att det kraschar utan null-check, ej testat raderna under
+        const parsedTasks = JSON.parse(jsonTasks ?? "") as typeof Tasks;
+        task.id = parsedTasks.length;
         parsedTasks.push(task);
         const jsonTasksNew = JSON.stringify(parsedTasks);
 
         localStorage.setItem(
-        "tasks", jsonTasksNew
-    );
-    }//nu kraschar det inte längre (efter null--check. Härnästa)
+            "tasks", jsonTasksNew
+        );
+    }
     else{
+        task.id = Tasks.length;
         Tasks.push(task);
         const jsonTasksNew = JSON.stringify(Tasks);
 
         localStorage.setItem(
-        "tasks", jsonTasksNew
-    );
+            "tasks", jsonTasksNew
+        );
     }
 
-    //toDo: hämta ut json-taskobjektet, parsa til Task[]-objekt, populera app.Context med alla tasks
-
-    // if (app) {
-    //     app.textContent = "testar";
-    // }
-
-    //const jsonTasks = JSON.stringify(tasks);
-
-    // const json = JSON.stringify(task);
-
-    // Tasks.push(task);
-    // const json2 = JSON.stringify(Tasks);
-
-    // // localStorage.setItem(
-    // //     "task", json
-    // // );
-
-    // localStorage.setItem(
-    //     "tasks", json2
-    // );
+    loadTasks();
 }
 
 function taskExists(task: Task) : boolean{
@@ -148,32 +92,26 @@ function taskExists(task: Task) : boolean{
         return false;
     }
 
-    const _taskExists = false; // (localStorage.getItem("task") ?? "").length > 0;
+    const _taskExists = false; 
 
-    // if(!_taskExists){
-    //     return false;
-    // }
-
-     const storedTask = localStorage.getItem("task");
-     const storedTasks = localStorage.getItem("tasks");
-
+    //const storedTask = localStorage.getItem("task");
+    //const storedTasks = localStorage.getItem("tasks");
     
-    // if (!_taskExists) {
-    //     return false;
-    // }
-    
-    const json = JSON.parse(storedTask ?? "") as Task;
-    const parsedTasks = JSON.parse(storedTasks ?? "") as Task[];
+    //const json = JSON.parse(storedTask ?? "") as Task;
+    //const parsedTasks = JSON.parse(storedTasks ?? "") as typeof Tasks;
+    const json = localStorage.getItem("tasks");
 
-    parsedTasks.forEach(_task => {
+    if(json === null){
+        return false;
+    }
+
+    Tasks = JSON.parse(json);
+
+    Tasks.forEach(_task => {
         if(_task.name === task.name){
             return true;
         }
     });
-
-    // if(json.name === task.name){
-    //     return true;
-    // }
 
     return _taskExists;
 }
