@@ -65,7 +65,7 @@ function loadTasks()
     }
 }
 
-    // function toggleTaskStatus(task: Task): void{
+     function toggleTaskStatus(task: Task): void{
     //     if(task === null)
     //     {
     //         return;
@@ -78,7 +78,7 @@ function loadTasks()
     //         }
     //     }
     //     loadTasks();
-    // }   
+     }   
 
 
 function saveTasks(task: Task): void{
