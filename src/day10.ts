@@ -44,11 +44,42 @@ function loadTasks()
         app.innerHTML = "";
         Tasks.forEach(task => {
             let innerDiv = document.createElement("div");
-            innerDiv.textContent = "Id: " + task.id + " Task: " + task.name + " Prioritet: " +  task.priority + " status: " + task.status;
+            let btnDelete = document.createElement("button");
+            let btnToggle = document.createElement("button");
+            btnDelete.textContent = "Delete";
+            btnToggle.textContent = "Mark as complete";
+            innerDiv.textContent = "Id: " + task.id + " Task: " + task.name + " Priority: " +  task.priority + " status: " + task.status;
+            
+            btnDelete.addEventListener("click", () => {
+                deleteTask(task);
+            });
+
+            btnToggle.addEventListener("click", () => {
+                toggleTaskStatus(task);
+            });
+
+            innerDiv.appendChild(btnDelete);
+            innerDiv.appendChild(btnToggle);
             app.appendChild(innerDiv);
         });
     }
 }
+
+    // function toggleTaskStatus(task: Task): void{
+    //     if(task === null)
+    //     {
+    //         return;
+    //     }
+
+    //     for(const _task of Tasks){
+    //             if(task.id === _task.id){
+    //                 _task.status = _task.status === "completed" ? "pending" : "completed";
+    //             }
+    //         }
+    //     }
+    //     loadTasks();
+    // }   
+
 
 function saveTasks(task: Task): void{
     if(task === null)
@@ -92,28 +123,29 @@ function taskExists(task: Task) : boolean{
         return false;
     }
 
-    const _taskExists = false; 
-
-    //const storedTask = localStorage.getItem("task");
-    //const storedTasks = localStorage.getItem("tasks");
-    
-    //const json = JSON.parse(storedTask ?? "") as Task;
-    //const parsedTasks = JSON.parse(storedTasks ?? "") as typeof Tasks;
     const json = localStorage.getItem("tasks");
 
     if(json === null){
         return false;
     }
 
-    Tasks = JSON.parse(json);
+    const _tasks = JSON.parse(json) as Task[];
 
-    Tasks.forEach(_task => {
-        if(_task.name === task.name){
-            return true;
-        }
-    });
+    return _tasks.some((_task: Task) => _task.name.toLowerCase() === task.name.toLowerCase());
+}
 
-    return _taskExists;
+function deleteTask(task: Task): void{
+    if(task === null){
+        return;
+    }
+    const json = localStorage.getItem("tasks");
+    if(json === null){
+        return;
+    }
+    const _tasks = JSON.parse(json) as Task[];
+    const updatedTasks = _tasks.filter((_task: Task) => _task.id !== task.id);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    loadTasks();
 }
 
 loadTasks();
