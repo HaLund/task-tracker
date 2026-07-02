@@ -16,6 +16,6 @@
 
 // console.log(add(3, 6))
 
-import calculate from "./default.js"
+import calculate from "./default"
 
 console.log(calculate(4, 4))
